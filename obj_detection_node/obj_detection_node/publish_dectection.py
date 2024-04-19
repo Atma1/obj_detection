@@ -7,7 +7,7 @@ class DetectionPublisher(Node):
 
     def __init__(self):
         super().__init__("detection_publisher")
-        self.publisher_ = self.create_publisher(Detection, "detection_publisher/detection", 10)
+        self.publisher_ = self.create_publisher(Detection, "detection_node/detection", 10)
         timer = 5
         self.timer = self.create_timer(timer, self.callback)
 
