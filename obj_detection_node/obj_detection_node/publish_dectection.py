@@ -9,7 +9,7 @@ from vision_msgs.msg import Detection2D, Detection2DArray, ObjectHypothesisWithP
 class DetectionPublisher(Node):
 
     def __init__(self):
-        super().__init__("detection_publisher")
+        super().__init__("detection_node")
         self.publisher_ = self.create_publisher(Detection, "detection_node/detection", 10)
         self.subscriber_ = self.create_subscription(Image, "detection_node/image", self.callback)
         self.bridge = cv_bridge.CvBridge()
