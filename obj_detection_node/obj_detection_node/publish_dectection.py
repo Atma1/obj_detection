@@ -13,14 +13,16 @@ class DetectionPublisher(Node):
         timer = 5
         self.subscriber_ = self.create_subscription(Image, "detection", self.callback)
         self.timer = self.create_timer(timer, self.callback)
+        self.bridge = cv_bridge.CvBridge()
 
-    def callback(self):
-        msg = self.infer()
+    def callback(self, image):
+        cv_image = self.bridge.imgmsg_to_cv2(image, desired_encoding="bgr8")
+        msg = self.infer(cv_image)
         self.publisher_.publish(msg=msg)
         self.get_logger().info(f"Publish class: {msg.object_class}")
 
-    def infer(self):
-        msg = Detection()
+    def infer(self, image):
+        msg = Detection(image)
         msg.bottom_rightmost_x = randrange(0, 99)
         msg.bottom_rightmost_y = randrange(0, 99)
         msg.top_leftmost_x = randrange(0, 99)
