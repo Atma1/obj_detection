@@ -11,7 +11,7 @@ class DetectionPublisher(Node):
     def __init__(self):
         super().__init__("detection_publisher")
         self.publisher_ = self.create_publisher(Detection, "detection_node/detection", 10)
-        self.subscriber_ = self.create_subscription(Image, "detection", self.callback)
+        self.subscriber_ = self.create_subscription(Image, "detection_node/image", self.callback)
         self.bridge = cv_bridge.CvBridge()
 
     def callback(self, image):
