@@ -1,6 +1,8 @@
 import rclpy
+import cv_bridge
 from rclpy.node import Node
 from random import randrange
+from sensor_msgs.msg import Image
 from obj_detection_interfaces.msg import Detection
 
 class DetectionPublisher(Node):
@@ -9,6 +11,7 @@ class DetectionPublisher(Node):
         super().__init__("detection_publisher")
         self.publisher_ = self.create_publisher(Detection, "detection_node/detection", 10)
         timer = 5
+        self.subscriber_ = self.create_subscription(Image, "detection")
         self.timer = self.create_timer(timer, self.callback)
 
     def callback(self):
