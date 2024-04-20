@@ -1,6 +1,7 @@
 import rclpy
 import cv_bridge
 from rclpy.node import Node
+from ultralytics import YOLO
 from random import randrange
 from sensor_msgs.msg import Image
 from obj_detection_interfaces.msg import Detection
@@ -13,6 +14,7 @@ class DetectionPublisher(Node):
         self.publisher_ = self.create_publisher(Detection, "detection_node/detection", 10)
         self.subscriber_ = self.create_subscription(Image, "detection_node/image", self.callback)
         self.bridge = cv_bridge.CvBridge()
+        self.model = YOLO("model_weight_path")
 
     def callback(self, image):
         cv_image = self.bridge.imgmsg_to_cv2(image, desired_encoding="bgr8")
@@ -21,14 +23,9 @@ class DetectionPublisher(Node):
         self.get_logger().info(f"Publish class: {msg.object_class}")
 
     def infer(self, image):
-        msg = Detection(image)
-        msg.bottom_rightmost_x = randrange(0, 99)
-        msg.bottom_rightmost_y = randrange(0, 99)
-        msg.top_leftmost_x = randrange(0, 99)
-        msg.top_leftmost_y = randrange(0, 99)
-        msg.object_class = randrange(0, 255)
+        result = self.model.predict(image)
 
-        return msg
+        return result
 
 def main(args=None):
     rclpy.init(args=args)
