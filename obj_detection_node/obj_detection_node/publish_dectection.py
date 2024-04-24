@@ -11,7 +11,8 @@ class DetectionPublisher(Node):
 
     def __init__(self):
         super().__init__("detection_node")
-        self.model_name = "yolov8n408.pt"
+        self.declare_parameter("model_name", "yolov8n.pt")
+        self.model_name = self.get_parameter("model_name").get_parameter_value().string_value
         self.path = get_package_share_directory("obj_detection_node")
         self.publisher_ = self.create_publisher(Detection2DArray, "detection_node/detection", 10)
         self.subscriber_ = self.create_subscription(Image, "detection_node/image", self.callback)

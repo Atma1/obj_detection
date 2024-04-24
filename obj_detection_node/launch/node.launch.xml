@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding"UTF-8">
 <launch>
+    <arg name="model_name" default="yolov8n408.pt"/>
     <node pkg="obj_detection_node" exec="publish_dectection.py" output="screen">
+        <param name="model_name" value="$(var model_name)"/>
     </node>
 </launch>
