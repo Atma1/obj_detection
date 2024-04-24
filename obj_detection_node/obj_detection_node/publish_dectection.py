@@ -1,5 +1,6 @@
 import rclpy
 import cv_bridge
+from ament_index_python.packages import get_package_share_directory
 from rclpy.node import Node
 from ultralytics import YOLO
 from sensor_msgs.msg import Image
@@ -10,10 +11,12 @@ class DetectionPublisher(Node):
 
     def __init__(self):
         super().__init__("detection_node")
+        self.model_name = "yolov8n408.pt"
+        self.path = get_package_share_directory("obj_detection_node")
         self.publisher_ = self.create_publisher(Detection2DArray, "detection_node/detection", 10)
         self.subscriber_ = self.create_subscription(Image, "detection_node/image", self.callback)
         self.bridge = cv_bridge.CvBridge()
-        self.model = YOLO("model_weight_path")
+        self.model = YOLO(f"{self.path}/models/{self.model_name}")
 
     def callback(self, image):
         cv_image = self.bridge.imgmsg_to_cv2(image, desired_encoding="bgr8")
