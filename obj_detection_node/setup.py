@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 from glob import glob
 import os
 
-package_name = 'obj_detection_pub'
+package_name = 'obj_detection_node'
 
 setup(
     name=package_name,
