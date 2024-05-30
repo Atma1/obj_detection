@@ -12,6 +12,9 @@ find_package(vision_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Detection.msg"
+  "msg/DetectionArray.msg"
+  "msg/Localization.msg"
+  "msg/LocalizationArray.msg"
   DEPENDENCIES vision_msgs
 )
 
