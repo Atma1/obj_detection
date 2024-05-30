@@ -1,0 +1,19 @@
+launch:
+  - arg:
+      name: "img_height"
+      default: 640
+  - arg:
+      name: "img_width"
+      default: 640
+  - node:
+    pkg: "obj_detection_node"
+    exec: "localization_publisher"
+    name: "localization"
+    namespace: "localization"
+    param:
+    -
+      name: "img_height"
+      value: "$(var img_height)"
+    -
+      name: "img_width"
+      value: "$(var img_width)"

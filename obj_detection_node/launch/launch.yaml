@@ -1,0 +1,22 @@
+launch:
+
+# args that can be set from the command line or a default will be used
+- arg:
+    name: "model_name"
+    default: "yolov8n317_best.pt"
+- arg:
+    name: "conf_threshold"
+    default: 0.7
+
+- node:
+    pkg: "obj_detection_node"
+    exec: "detection_publisher"
+    name: "detection"
+    namespace: "detection"
+    param:
+    -
+      name: "model_name"
+      value: "$(var model_name)"
+    -
+      name: "conf_threshold"
+      value: "$(var conf_threshold)"
