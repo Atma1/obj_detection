@@ -8,8 +8,8 @@ from obj_detection_interfaces.msg import Detection, DetectionArray
 from vision_msgs.msg import ObjectHypothesis
 from util.util import center_crop
 
-class DetectionPublisher(Node):
 
+class DetectionPublisher(Node):
     def __init__(self):
         super().__init__("detection_node")
         self.declare_parameter("model_name", "yolov8n.pt")
@@ -17,8 +17,11 @@ class DetectionPublisher(Node):
         self.model_name = self.get_parameter("model_name").get_parameter_value().string_value
         self.conf_threshold = self.get_parameter("conf_threshold").get_parameter_value().double_value
         self.path = get_package_share_directory("obj_detection_node")
-        self.publisher_ = self.create_publisher(DetectionArray, "detection_node/detection", 10)
-        self.subscriber_ = self.create_subscription(Image, "detection_node/image", self.callback, 10)
+        self.publisher_ = self.create_publisher(DetectionArray,
+                                                "detection_node/detection", 10)
+        self.subscriber_ = self.create_subscription(Image,
+                                                    "detection_node/image",
+                                                    self.callback, 10)
         self.bridge = cv_bridge.CvBridge()
         self.model = YOLO(f"{self.path}/models/{self.model_name}")
         self.get_logger().info('Initializing detection publisher')
@@ -30,7 +33,7 @@ class DetectionPublisher(Node):
         if results is not None:
             msg = self.create_message(results=results)
             self.publisher_.publish(msg=msg)
-            self.get_logger().info(f"Published inference")
+            self.get_logger().info("Published inference")
         else:
             self.get_logger().info("No detection.")
 
@@ -38,12 +41,14 @@ class DetectionPublisher(Node):
         result = self.model.predict(image, conf=self.conf_threshold)
 
         return result
-    
+
     def create_message(self, results):
         detection_array = DetectionArray()
         bounding_box = results[0].boxes.xyxy
         classes = results[0].boxes.cls
         confidence_score = results[0].boxes.conf
+
+        detection_array.results = []
 
         for bbox, cls, conf in zip(bounding_box, classes, confidence_score):
             detection = Detection()
@@ -61,12 +66,14 @@ class DetectionPublisher(Node):
         print(detection_array)
         return detection_array
 
+
 def main(args=None):
     rclpy.init(args=args)
     detection_pub = DetectionPublisher()
     rclpy.spin(detection_pub)
     detection_pub.destroy_node()
     rclpy.shutdown()
+
 
 if __name__ == "__main__":
     main()

@@ -11,8 +11,8 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
-        (os.path.join('share', package_name+'/models'), glob('models/*.pt')),
-        (os.path.join('share', package_name+'/util'), glob('util/*.py')),
+        (os.path.join('share', package_name + '/models'), glob('models/*.pt')),
+        (os.path.join('share', package_name + '/util'), glob('util/*.py')),
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('launch/*launch.[pxy][yma]*')),
     ],
